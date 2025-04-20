@@ -1,4 +1,4 @@
-<h1 align="center">🌿 Green AI</h1>
+<h1 align="center">RNN training pipeline</h1>
 
 <p align="center">
   <a href="https://greenai-report.streamlit.app/">
