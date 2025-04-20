@@ -38,8 +38,10 @@ class DataLoader:
             raise ValueError(f"Unsupported file type: {ext}")
 
         df = pd.DataFrame(data)
-        return df
+        df = df.select_dtypes(exclude=['object'])
 
+        return df           
+    
     def _has_headers(self, df):
         """
         Determines if the first row of the DataFrame contains headers.

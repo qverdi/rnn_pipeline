@@ -24,9 +24,10 @@ seaborn = "^0.13.2"
 streamlit = "^1.41.1"
 ray = "^2.43.0"
 nevergrad = "^1.0.8"
+yfinance = "^0.2.55"
 
 [tool.poetry.scripts]
-experiment = "src.cmd.main:main"
+pipeline = "src.cmd.main:main"
 report = "src.cmd.report:main"
 deploy = "src.cmd.deploy:main"
 

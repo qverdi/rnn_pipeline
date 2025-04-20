@@ -2,8 +2,6 @@ from src.config.file_constants import (
     MODEL_OPTIMIZER_PARAMS,
     SEARCH_SPACE_FILE,
     EXPERIMENT_PARAMS,
-    GA_SEARCH_OPTIMIZER_PARAMS,
-    DE_SEARCH_OPTIMIZER_PARAMS,
     SEARCH_OPTIMIZER_PARAMS,
     OUTPUT_DIR,
     MODEL_DESIGN,
@@ -26,8 +24,6 @@ class InputValidator:
         self.model_optimizer_params = json_utils.read_json_file(MODEL_OPTIMIZER_PARAMS)
         self.model_design = json_utils.read_json_file(MODEL_DESIGN)
         self.search_params = json_utils.read_json_file(SEARCH_OPTIMIZER_PARAMS)
-        self.ga_params = json_utils.read_json_file(GA_SEARCH_OPTIMIZER_PARAMS)
-        self.de_params = json_utils.read_json_file(DE_SEARCH_OPTIMIZER_PARAMS)
 
     def validate(self):
         self.validate_experiment()
