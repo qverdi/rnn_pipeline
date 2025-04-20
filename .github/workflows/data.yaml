@@ -26,10 +26,10 @@ jobs:
          python-version: "3.10.6"
          token: ${{ secrets.TKN }}
      - uses: iterative/setup-dvc@v1
-     - name: Setup Dagshub
+     - name: Setup Dagshub remote
        run: |
-         dvc remote modify origin --local user ${{ secrets.DAGSHUB_USERNAME }}
-         dvc remote modify origin --local password ${{ secrets.DAGSHUB_TOKEN }}
+        dvc remote modify origin --local url https://${{ secrets.DAGSHUB_USERNAME }}:${{ secrets.DAGSHUB_TOKEN }}@dagshub.com/qverdi/rnn_pipeline.dvc
+
      - name: Setup git config
        run: |
          git config user.name "GitHub Actions Bot"
