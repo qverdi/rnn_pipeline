@@ -19,10 +19,10 @@ jobs:
      - name: Setup Python
        uses: actions/setup-python@v3
        with:
-         python-version: "3.10.6"
-         cache: 'poetry'
-     - name: Install deps
-       run: poetry install
+        python-version: "3.10.6"
+        cache: 'poetry'
+        cache-dependency-path: poetry.lock  
+       
 
  fetch_data:
    needs: install_deps
