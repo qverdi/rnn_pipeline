@@ -20,6 +20,7 @@ jobs:
      - name: Setup poetry
        run: |
          pipx install poetry
+         poetry install
      - name: Setup Python
        uses: actions/setup-python@v3
        with:
