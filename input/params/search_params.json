@@ -1,0 +1,5 @@
+{
+  "sampler": "random",
+  "trials": 100,
+  "n_jobs": 5
+}

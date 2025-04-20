@@ -171,7 +171,7 @@ The app requires the following inputs:
 
 Currently, the app supports multiple files for the same experiment parameters and multiple files for the same the search space. This is handled by the `ExperimentHandler`, which assigns each data source the defined parameters. It is possible to have uni-variate and multi-variate time series. By default program will load all columns from csv, if there are more than one. If you want to do time series analysis for uni-variate type, make sure that csv file has only one column and that `target_column` is set to 0. In case, you have to do multi-variate analysis make sure to set `target_column` to the index of the desired column which will be used for prediction. By default RNN models will be trained on all columns, but predict value based only on column defined as `target_column`.
 
-After this step, the `HPOManager`, based on the experiment settings, selects the HPO Optimizer (RS, BO, GA, DE). The HPO Optimizer defines an objective function that executes the model training. The model is compiled and built based on the hyperparameters chosen by the HPO Optimizer.
+After this step, the `HPOManager`, based on the experiment settings, selects the HPO Optimizer (RS, BO). The HPO Optimizer defines an objective function that executes the model training. The model is compiled and built based on the hyperparameters chosen by the HPO Optimizer.
 
 During model training, the `MetricCallback` is called for evaluating results. This happens after every epoch for the purpose of post hoc analysis. Metrics such as MAE, MSE, RMSE, and SMAPE on the test data are calculated, while AUNL is calculated on both the training loss and validation loss. These results are logged in an experiment-specific file in the output directory as `e_{experiment.id_filename}.csv`, alongside all experiment parameters, budget parameters, search space parameters, model ID, epoch number, training time, loss, and validation loss values.
 
@@ -198,9 +198,7 @@ Description of folder structure for this project.
 │   │       data.txt
 │   │       
 │   └───params (User defined parameters)
-│           differential_params.json (Parameters for DE algorithm)
 │           experiment_params.json (Parameters on experiment level)
-│           genetic_params.json (Parameters for genetic algorithm)
 │           model_design.json (Model architecture definition file)
 │           model_optimizer_params.json (Model optimizer parameters for fine tuning)
 │           model_params.json (Parameters for search space)
@@ -250,21 +248,6 @@ Description of folder structure for this project.
     │   │   hpo_manager.py (Selects optimizer based on experiment)
     │   │   hpo_stopping.py (Stopping logic due to budget exhaustion)
     │   │   hpo_termination_error.py (Custom error for terminating optimization)
-    │   │
-    │   ├───de (Differential Evolution algorithm processes)
-    │   │   │   differential_optimizer.py (Entry for DE algorithm for HPO)
-    │   │   │   differential_optimizer_init.py (Initialization for library required instances)
-    │   │   │   differential_optimizer_params.py (Container class for parameters)
-    │   │   │   differential_optimizer_set.py (Parameter set creator for model-expected classes)
-    │   │   │
-    │   │
-    │   ├───ga (Genetic Algorithm processes)
-    │   │   │   genetic_optimizer.py (Entry for GA algorithm for HPO)
-    │   │   │   genetic_optimizer_callback.py (Stopping callback for GA)
-    │   │   │   genetic_optimizer_init.py (Initialization for library required instances)
-    │   │   │   genetic_optimizer_params.py (Container class for parameters)
-    │   │   │   genetic_optimizer_set.py  (Parameter set creator for model-expected classes)
-    │   │   
     │   │
     │   ├───search (Search algorithm processes)
     │   │   │   search_optimizer_callback.py (Stopping callback for search)
@@ -326,36 +309,6 @@ Description of folder structure for this project.
 {
   "sampler": "bayesian", // Sampler for search algorithm. Only from the list [random, bayesian]
   "trials": 3
-}
-```
-
-Parameters for **genetic algorithms** are presented below from the file input/params/genetic_params.json
-
-```json
-{
-  "population_size": 6,
-  "generations": 3,
-  "crossover_prob": 0.5,
-  "mutation_prob": 0.2,
-  "indpb": 0.2,
-  "tournsize": 3
-}
-```
-
-Parameters for **differential evoluation** algorithms are presented below from the file input/params/differential_params.json
-
-```json
-{
-  "strategy": "best1bin",
-  "popsize": 2,
-  "maxiter": 1,
-  "recombination": 0.5,
-  "mutation": 0.1,
-  "init": "random", //initialization
-  "polish": false,
-  "tol": 1e-1,
-  "atol": 1e-1,
-  "workers": 4 //For splitting workload into separate processes
 }
 ```
 
@@ -425,22 +378,7 @@ Output file contains following parameters:
 - `tolerance`: Tolerance for early stopping.
 - `n_trails`: Number of trials in hyperparameter optimization.
 - `search_sampler`: Sampling strategy for hyperparameter search.
-- `population_size`: Population size for evolutionary algorithms.
-- `generations`: Number of generations for evolutionary algorithms.
-- `crossover_prob`: Crossover probability in genetic algorithms.
-- `mutation_prob`: Mutation probability in genetic algorithms.
-- `elite`: Number of elite individuals preserved per generation.
-- `indpb`: Independent probability of gene mutation.
-- `tournsize`: Tournament size for selection.
-- `strategy`: Strategy used in the optimization process.
-- `popsize`: Population size for differential evolution.
-- `maxiter`: Maximum number of iterations for optimization.
-- `recombination`: Recombination rate for differential evolution.
-- `mutation`: Mutation factor for differential evolution.
 - `init`: Initialization strategy for optimization.
-- `polish`: Whether to perform a polishing step after optimization.
-- `tol`: Tolerance for convergence in optimization.
-- `atol`: Absolute tolerance for stopping criteria.
 - `model_id`: Unique identifier for the trained model.
 - `num_layers`: Number of layers in the model architecture.
 - `layers`: Types of layers used in the model.
@@ -477,8 +415,6 @@ Output file contains following parameters:
 - ✅ Support for conducting same experiment parameters on multiple data files
 - ✅ Support for file extenstions CSV, TXT, XLS, XLXS
 - ✅ Search (RS, BO) algorithms for HPO
-- ✅ Genetic (Simple EA) algorithm for HPO
-- ✅ DE algorithm for HPO
 - ✅ AUNL Calculation
 - ✅ Patience, step evaluation
 - ✅ Results logging
@@ -506,4 +442,3 @@ https://greenai-report.streamlit.app/
 ❗In case of inactivity app can hibernate. Please wait few minutes before it becomes available again.
 
 💡 Currently showing results from: `experiment/11022025`
-# rnn_pipeline

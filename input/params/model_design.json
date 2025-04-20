@@ -1,0 +1,8 @@
+{
+  "layers": ["lstm", "lstm"],
+  "neurons": [16, 16],
+  "dropout_rate": [0.1, 0.1],
+  "activation": ["relu", "relu"],
+  "focus": ["dropout_rate"],
+  "freeze": [0, 0]
+}
