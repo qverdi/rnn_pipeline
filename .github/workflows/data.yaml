@@ -44,7 +44,7 @@ jobs:
      
      - name: Add data
        run: |
-         dvc add data
+         dvc add input/data
 
      - uses: stefanzweifel/git-auto-commit-action@v4
        with:
