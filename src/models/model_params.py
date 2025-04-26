@@ -46,6 +46,7 @@ class ModelParams:
         self.learning_rate = 0.01  # Learning rate
         self.batch_size = 16  # Batch size
         self.optimizer_params = None
+        self.horizon = 1
 
         # Update default attributes with values from the `params` dictionary
         if params:

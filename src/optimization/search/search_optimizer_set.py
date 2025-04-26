@@ -91,6 +91,7 @@ class SearchOptimizerSet(HPOOptimizerSet):
 
         set["experiment_id"] = self.experiment.id
         set["loss"] = self.experiment.loss_function
+        set["horizon"] = self.experiment.horizon
 
         if self.experiment.optimizer_finetuning:
             set.update(self.generate_model_optimizer_set(trial))
@@ -159,6 +160,7 @@ class SearchOptimizerSet(HPOOptimizerSet):
         base_set.update({
             "experiment_id": self.experiment.id,
             "loss": self.experiment.loss_function,
+            "horizon": self.experiment.horizon
         })
 
         return base_set

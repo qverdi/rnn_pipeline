@@ -43,6 +43,7 @@ class ExperimentParam:
         self.val_size = 0.1
         self.target_column = 0
         self.window_size = 5
+        self.horizon = 5
         self.optimizer_finetuning = False
         self.has_model = False
         self.is_descrete = False

@@ -38,24 +38,26 @@ class Model:
         return layer_types[layer]
 
     def build_model(self):
+        print(f"[HORIZON] {self.params.horizon}")
         """
         Build and compile the model dynamically based on the provided parameters.
+        Supports multi-step forecasting via Dense(horizon).
         """
         rnn_layer = self._get_rnn_layer(self.params.layers[0])
         model = Sequential()
 
-        # First layer with input shape
+        # First RNN layer with input shape
         model.add(
             rnn_layer(
                 self.params.neurons[0],
                 activation=self.params.activation[0],
                 return_sequences=(self.params.num_layers > 1),
-                input_shape=self.params.input_shape,
+                input_shape=self.params.input_shape,  # shape: (window_size, n_features)
             )
         )
         model.add(Dropout(self.params.dropout_rate[0]))
 
-        # Additional layers
+        # Additional RNN layers
         for i in range(1, self.params.num_layers):
             return_sequences = i < self.params.num_layers - 1
             rnn_layer = self._get_rnn_layer(self.params.layers[i])
@@ -68,10 +70,10 @@ class Model:
             )
             model.add(Dropout(self.params.dropout_rate[i]))
 
-        # Output layer
-        model.add(Dense(1))
+        # Final output layer
+        model.add(Dense(self.params.horizon))  # 👈 output shape: (samples, horizon)
 
-        # Compile the model
+        # Compile model
         model.compile(optimizer=self._get_optimizer(), loss=self.params.loss)
 
         self.model = model

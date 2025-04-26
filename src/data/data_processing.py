@@ -81,20 +81,18 @@ class DataProcessing:
             """
             # Generate sequences for input (X) and target (y)
             X, y = create_sequences(
-                data, 
-                self.experiment_params.window_size, 
-                self.experiment_params.target_column
+                data,
+                self.experiment_params.window_size,
+                self.experiment_params.target_column,
+                self.experiment_params.horizon,
             )
 
-            # Store original shape of X
-            samples, window_size, num_features = X.shape  
+            # Reshape for scaling
+            samples, window_size, n_features = X.shape
+            X_scaled = self._scale_data(X.reshape(-1, n_features), "X", fit)
+            X_scaled = X_scaled.reshape(samples, window_size, n_features)
 
-            # Reshape X to 2D for scaling and then reshape it back to 3D
-            X_scaled = self._scale_data(X.reshape(-1, num_features), "X", fit)
-            X_scaled = X_scaled.reshape(samples, window_size, num_features)
-
-            # Reshape y to 2D for scaling
-            y_scaled = self._scale_data(y.reshape(-1, 1), "y", fit)
+            y_scaled = self._scale_data(y, "y", fit)  # already 2D
 
             return X_scaled, y_scaled
 
@@ -107,25 +105,20 @@ class DataProcessing:
 
 
 
-def create_sequences(data, window_size, target_column=0):
+def create_sequences(data, window_size, target_column=0, horizon=1):
     """
-    Generate sequences from time series data, handling both single and multi-column cases.
-
-    Args:
-        data (pd.DataFrame or np.ndarray): Time series data with one or more columns.
-        window_size (int): Number of past timesteps to include in each sequence.
+    Robust sequence generator supporting multi-feature input.
 
     Returns:
-        tuple:
-            - X (np.ndarray): Shape (samples, window_size, num_features).
-            - y (np.ndarray): Shape (samples, num_features).
+        - X: shape (samples, window_size, n_features)
+        - y: shape (samples, horizon)
     """
     X, y = [], []
+    total_length = len(data)
 
-    for i in range(len(data) - window_size):
-        X.append(data[i : i + window_size])  # Sequence of past `window_size` timesteps
-        y.append(data[i + window_size, target_column].reshape(-1, 1))
+    for i in range(total_length - window_size - horizon + 1):
+        X.append(data[i : i + window_size])  # all features
+        y.append(data[i + window_size : i + window_size + horizon, target_column])  # single target
 
-    # Convert lists to NumPy arrays
-    X, y = np.array(X), np.array(y)
-    return X, y
+    return np.array(X), np.array(y)
+
