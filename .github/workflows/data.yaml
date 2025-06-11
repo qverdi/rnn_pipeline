@@ -1,55 +1,55 @@
-name: Data Workflow
+# name: Data Workflow
 
-on:
- push:
-   branches:
-     - main
- schedule:
-    - cron: "0 0 * * *"
-jobs:
- fetch_data:
-   runs-on: ubuntu-latest
-   outputs:
-     sha_new: ${{steps.sha_new.outputs.SHA_NEW}}
-   permissions:
-     contents: write
-   steps:
-     - uses: actions/checkout@v3
-       with:
-         fetch-depth: 0
-     - name: Setup Python
-       uses: actions/setup-python@v3
-       with:
-         python-version: "3.10.6"
-         token: ${{ secrets.TKN }}
-     - name: Setup poetry
-       run: |
-         pipx install poetry
-         poetry install         
-     - uses: iterative/setup-dvc@v1
-     - name: Setup Dagshub remote
-       run: |
-        dvc remote modify origin --local url https://${{ secrets.DAGSHUB_USERNAME }}:${{ secrets.DAGSHUB_TOKEN }}@dagshub.com/qverdi/rnn_pipeline.dvc
+# on:
+#  push:
+#    branches:
+#      - main
+#  schedule:
+#     - cron: "0 0 * * *"
+# jobs:
+#  fetch_data:
+#    runs-on: ubuntu-latest
+#    outputs:
+#      sha_new: ${{steps.sha_new.outputs.SHA_NEW}}
+#    permissions:
+#      contents: write
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#      - name: Setup Python
+#        uses: actions/setup-python@v3
+#        with:
+#          python-version: "3.10.6"
+#          token: ${{ secrets.TKN }}
+#      - name: Setup poetry
+#        run: |
+#          pipx install poetry
+#          poetry install         
+#      - uses: iterative/setup-dvc@v1
+#      - name: Setup Dagshub remote
+#        run: |
+#         dvc remote modify origin --local url https://${{ secrets.DAGSHUB_USERNAME }}:${{ secrets.DAGSHUB_TOKEN }}@dagshub.com/qverdi/rnn_pipeline.dvc
 
-     - name: Setup git config
-       run: |
-         git config user.name "GitHub Actions Bot"
-         git config user.email "qverdi@users.noreply.github.com"
-     - name: Pull changes
-       run: |
-         git pull
-         dvc pull
-     - name: Fetch data
-       run: poetry run fetch_data
+#      - name: Setup git config
+#        run: |
+#          git config user.name "GitHub Actions Bot"
+#          git config user.email "qverdi@users.noreply.github.com"
+#      - name: Pull changes
+#        run: |
+#          git pull
+#          dvc pull
+#      - name: Fetch data
+#        run: poetry run fetch_data
      
-     - name: Add data
-       run: |
-         dvc add input/data
+#      - name: Add data
+#        run: |
+#          dvc add input/data
 
-     - uses: stefanzweifel/git-auto-commit-action@v4
-       with:
-         commit_message: Commit changed data
+#      - uses: stefanzweifel/git-auto-commit-action@v4
+#        with:
+#          commit_message: Commit changed data
 
-     - name: Push to dvc
-       run: |
-         dvc push
+#      - name: Push to dvc
+#        run: |
+#          dvc push
